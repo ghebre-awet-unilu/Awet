@@ -1,0 +1,104 @@
+{{ define "main" }}
+
+<section class="page-hero page-hero-sm">
+  <div class="container">
+    <h1 class="page-title">Set Admin Password</h1>
+    <p class="page-sub">Choose a password for your admin account</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container auth-wrap">
+    <div class="auth-card">
+      <h2 class="auth-card-title">Create password</h2>
+
+      <form id="setupForm" class="auth-form">
+        <div class="form-group">
+          <label for="newPassword">New password</label>
+          <input
+            type="password"
+            id="newPassword"
+            required
+            minlength="8"
+            autocomplete="new-password"
+            placeholder="Min 8 characters"
+          />
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            required
+            minlength="8"
+            autocomplete="new-password"
+            placeholder="Repeat password"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary auth-submit">
+          Save password
+        </button>
+      </form>
+
+      <p id="setupMsg" class="auth-message" style="display: none"></p>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var token = params.get("token") || "";
+    var form = document.getElementById("setupForm");
+    var msg = document.getElementById("setupMsg");
+    var LOGIN_URL = window.LuxeAPI.siteUrl("admin/");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var p1 = document.getElementById("newPassword").value;
+      var p2 = document.getElementById("confirmPassword").value;
+
+      msg.style.display = "block";
+
+      if (!token) {
+        msg.className = "auth-message auth-error";
+        msg.textContent =
+          "Missing token in URL. Open the link from your email.";
+        return;
+      }
+
+      if (p1 !== p2) {
+        msg.className = "auth-message auth-error";
+        msg.textContent = "Passwords do not match.";
+        return;
+      }
+
+      if (p1.length < 8) {
+        msg.className = "auth-message auth-error";
+        msg.textContent = "Password must be at least 8 characters.";
+        return;
+      }
+
+      msg.className = "auth-message";
+      msg.textContent = "Saving...";
+
+      window.LuxeAPI.request("/api/admin/setup-password", {
+        method: "POST",
+        body: { token: token, password: p1 },
+      })
+        .then(function () {
+          msg.className = "auth-message auth-ok";
+          msg.textContent = "Password saved. Opening login...";
+          setTimeout(function () {
+            window.location.href = LOGIN_URL;
+          }, 800);
+        })
+        .catch(function (err) {
+          msg.className = "auth-message auth-error";
+          msg.textContent = err.message;
+        });
+    });
+  })();
+</script>
+
+{{ end }}

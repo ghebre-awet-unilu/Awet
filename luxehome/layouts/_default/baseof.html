@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+    {{ if .IsHome }}
+      {{ .Site.Title }}
+    {{ else }}
+      {{ .Title }} | {{ .Site.Title }}
+    {{ end }}
+  </title>
+
+  <meta name="description" content="{{ .Site.Params.description }}">
+  <meta name="luxe-api" content="{{ .Site.Params.apiBase }}">
+  <meta name="luxe-base" content="{{ "" | relURL }}">
+  <script src="{{ "js/api.js" | relURL }}"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
+</head>
+<body{{ if eq .Section "admin" }} class="admin-body"{{ end }}>
+
+  {{ if ne .Section "admin" }}
+  <nav class="navbar" id="navbar">
+    <div class="container nav-inner">
+
+      <a class="nav-brand" href="{{ .Site.Home.RelPermalink }}">
+        <span class="brand-mark">
+          <img
+            src="{{ "images/logo.png" | relURL }}"
+            alt=""
+            class="brand-logo"
+            width="40"
+            height="40"
+          >
+        </span>
+        <span class="brand-wordmark">Luxe<em>Home</em></span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        {{ range .Site.Menus.main }}
+        <li>
+          <a href="{{ .URL | absURL }}">{{ .Name }}</a>
+        </li>
+        {{ end }}
+        <li class="nav-cta-wrap">
+          <a href="{{ "contact/" | absURL }}" class="btn btn-nav">Book a visit</a>
+        </li>
+      </ul>
+
+    </div>
+  </nav>
+  {{ end }}
+
+  <main>
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  {{ if ne .Section "admin" }}
+  <footer class="footer">
+    <div class="footer-top-line"></div>
+    <div class="container footer-inner">
+
+      <div class="footer-brand">
+        <a class="footer-logo" href="{{ .Site.Home.RelPermalink }}">
+          <span class="brand-mark footer-mark">
+            <img src="{{ "images/logo.png" | relURL }}" alt="" width="36" height="36">
+          </span>
+          <span class="brand-wordmark footer-wordmark">Luxe<em>Home</em></span>
+        </a>
+        <p>Your trusted partner in Luxembourg property — sales, rentals, and honest advice.</p>
+        <a href="{{ "contact/" | absURL }}" class="btn btn-footer">Get in touch</a>
+      </div>
+
+      <div class="footer-links">
+        <h4>Explore</h4>
+        <ul>
+          {{ range .Site.Menus.main }}
+          <li><a href="{{ .URL | absURL }}">{{ .Name }}</a></li>
+          {{ end }}
+        </ul>
+      </div>
+
+      <div class="footer-contact">
+        <h4>Visit us</h4>
+        <p><span>Email</span> info@luxehome.lu</p>
+        <p><span>Phone</span> +352 661 105 920</p>
+        <p><span>Office</span> Luxembourg City</p>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <span>&copy; {{ now.Format "2006" }} LuxeHome Real Estate</span>
+        <span class="footer-tag">Homes across the Grand Duchy</span>
+      </div>
+    </div>
+  </footer>
+  {{ end }}
+
+  <script src="{{ "js/search.js" | relURL }}"></script>
+  <script src="{{ "js/booking.js" | relURL }}"></script>
+  <script>
+    window.addEventListener("scroll", function () {
+      var nav = document.getElementById("navbar");
+      if (nav) nav.classList.toggle("scrolled", window.scrollY > 50);
+    });
+    var navToggle = document.getElementById("navToggle");
+    if (navToggle) {
+      navToggle.addEventListener("click", function () {
+        var links = document.getElementById("navLinks");
+        if (links) links.classList.toggle("open");
+        this.classList.toggle("open");
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+{{ define "main" }}
+
+<section class="page-hero page-hero-sm">
+  <div class="container">
+    <h1 class="page-title">Admin Login</h1>
+    <p class="page-sub">Enter admin email and password</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container auth-wrap">
+    <div class="auth-card">
+      <h2 class="auth-card-title">Admin access</h2>
+
+      <form id="adminLoginForm" class="auth-form">
+        <div class="form-group">
+          <label for="adminEmail">Email</label>
+          <input type="email" id="adminEmail" name="email" required placeholder="your admin email" autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label for="adminPassword">Password</label>
+          <input type="password" id="adminPassword" name="password" required placeholder="••••••••" minlength="8" autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn-primary auth-submit" id="adminLoginBtn">Login to dashboard</button>
+      </form>
+
+      <p id="adminAuthMessage" class="auth-message" style="display: none"></p>
+
+      <p class="auth-card-note admin-setup-note">
+        First time, or forgot your password?
+        <button type="button" class="admin-link-btn" id="sendSetupLinkBtn">Email me a setup link</button>
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var api = window.LuxeAPI;
+    var DASHBOARD_URL = api.siteUrl("admin/dashboard/");
+    var msg = document.getElementById("adminAuthMessage");
+    var loginBtn = document.getElementById("adminLoginBtn");
+    var setupBtn = document.getElementById("sendSetupLinkBtn");
+
+    function say(kind, text) {
+      msg.style.display = "block";
+      msg.className = "auth-message" + (kind ? " auth-" + kind : "");
+      msg.textContent = text;
+    }
+
+    // Already logged in -> go straight to the dashboard.
+    if (api.getSession()) {
+      window.location.replace(DASHBOARD_URL);
+      return;
+    }
+
+    document.getElementById("adminLoginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var email = document.getElementById("adminEmail").value.trim().toLowerCase();
+      var password = document.getElementById("adminPassword").value;
+
+      say("", "Checking...");
+      loginBtn.disabled = true;
+
+      api.request("/api/admin/login", { method: "POST", body: { email: email, password: password } })
+        .then(function (data) {
+          api.setSession(data);
+          say("ok", "Login successful. Opening dashboard...");
+          setTimeout(function () { window.location.href = DASHBOARD_URL; }, 500);
+        })
+        .catch(function (err) {
+          say("error", err.message);
+          loginBtn.disabled = false;
+        });
+    });
+
+    setupBtn.addEventListener("click", function () {
+      setupBtn.disabled = true;
+      say("", "Sending setup link...");
+      api.request("/api/admin/send-setup-link", { method: "POST" })
+        .then(function (data) {
+          say("ok", data.emailSent
+            ? "A setup link was sent to the admin email address. Check your inbox."
+            : "Email could not be sent. The setup link was printed in the API terminal.");
+        })
+        .catch(function (err) { say("error", err.message); })
+        .then(function () { setupBtn.disabled = false; });
+    });
+  })();
+</script>
+
+{{ end }}

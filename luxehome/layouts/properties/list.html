@@ -1,0 +1,91 @@
+{{ define "main" }}
+
+<section class="page-hero">
+  <div class="container">
+    <h1 class="page-title">{{ .Title }}</h1>
+    <p class="page-sub">{{ with .Description }}{{ . }}{{ else }}Browse our full selection of properties across Luxembourg.{{ end }}</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <div class="filter-bar">
+      <input
+        type="text"
+        id="searchInput"
+        class="search-input"
+        placeholder="Search by title, location, or type..."
+        aria-label="Search properties"
+      >
+      <div class="filter-controls">
+        <select id="filterType" class="filter-select" aria-label="Filter by type">
+          <option value="">All Types</option>
+          <option value="Apartment">Apartment</option>
+          <option value="Villa">Villa</option>
+          <option value="House">House</option>
+          <option value="Penthouse">Penthouse</option>
+          <option value="Studio">Studio</option>
+          <option value="Room">Room</option>
+        </select>
+        <select id="filterStatus" class="filter-select" aria-label="Filter by status">
+          <option value="">All Status</option>
+          <option value="For Sale">For Sale</option>
+          <option value="For Rent">For Rent</option>
+        </select>
+        <button id="clearFilters" class="btn btn-outline btn-sm">Clear</button>
+      </div>
+    </div>
+
+    <p class="results-count" id="resultsCount"></p>
+
+    <div class="property-grid" id="propertyGrid">
+      {{ range .RegularPages }}
+      <div class="property-card"
+        data-title="{{ .Title | lower }}"
+        data-location="{{ .Params.location | lower }}"
+        data-type="{{ .Params.type }}"
+        data-status="{{ .Params.status }}"
+      >
+        <div class="card-image">
+          {{ if .Params.image }}
+          <img src="{{ .Params.image | strings.TrimPrefix "/" | absURL }}" alt="{{ .Title }}" loading="lazy">
+          {{ else }}
+          <div class="card-image-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+          </div>
+          {{ end }}
+          <span class="card-badge {{ if eq .Params.status "For Rent" }}badge-rent{{ else }}badge-sale{{ end }}">{{ .Params.status }}</span>
+        </div>
+        <div class="card-body">
+          <div class="card-type">{{ .Params.type }}</div>
+          <h3 class="card-title">{{ .Title }}</h3>
+          <p class="card-location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
+            {{ .Params.location }}
+          </p>
+          <p class="card-desc">{{ .Params.description | truncate 100 }}</p>
+          <div class="card-meta">
+            {{ if .Params.bedrooms }}<span>{{ .Params.bedrooms }} bed</span>{{ end }}
+            {{ if .Params.bathrooms }}<span>{{ .Params.bathrooms }} bath</span>{{ end }}
+            {{ if .Params.area }}<span>{{ .Params.area }}m²</span>{{ end }}
+          </div>
+          <div class="card-footer">
+            <span class="card-price">{{ .Params.price }}</span>
+            <a href="{{ .RelPermalink }}" class="btn btn-sm btn-primary">View Details</a>
+          </div>
+        </div>
+      </div>
+      {{ end }}
+    </div>
+
+    <div id="noResults" class="no-results" style="display:none;">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <p>No properties match your search. Try adjusting your filters.</p>
+      <button onclick="clearAllFilters()" class="btn btn-outline btn-sm">Clear Filters</button>
+    </div>
+
+  </div>
+</section>
+
+{{ end }}

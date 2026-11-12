@@ -1,0 +1,107 @@
+{{ define "main" }}
+{{ .Scratch.Set "adminActive" "dashboard" }}
+{{ partial "admin-shell-start.html" . }}
+
+<div class="admin-topbar">
+  <div>
+    <h1 class="admin-page-title">Dashboard</h1>
+    <p class="admin-page-sub">Overview of listings, bookings and quick actions</p>
+  </div>
+</div>
+
+<p class="admin-bookings-status is-error" id="dashError" hidden></p>
+
+<div class="admin-stats">
+  <div class="admin-stat-card">
+    <p class="admin-stat-label">Total properties</p>
+    <p class="admin-stat-value" id="statTotal">–</p>
+  </div>
+  <div class="admin-stat-card admin-stat-sale">
+    <p class="admin-stat-label">For sale</p>
+    <p class="admin-stat-value" id="statSale">–</p>
+  </div>
+  <div class="admin-stat-card admin-stat-rent">
+    <p class="admin-stat-label">For rent</p>
+    <p class="admin-stat-value" id="statRent">–</p>
+  </div>
+  <div class="admin-stat-card admin-stat-featured">
+    <p class="admin-stat-label">Featured</p>
+    <p class="admin-stat-value" id="statFeatured">–</p>
+  </div>
+</div>
+
+<div class="admin-stats">
+  <div class="admin-stat-card">
+    <p class="admin-stat-label">Total bookings</p>
+    <p class="admin-stat-value" id="statBookings">–</p>
+  </div>
+  <div class="admin-stat-card admin-stat-rent">
+    <p class="admin-stat-label">Paid bookings</p>
+    <p class="admin-stat-value" id="statPaid">–</p>
+  </div>
+  <div class="admin-stat-card admin-stat-sale">
+    <p class="admin-stat-label">Awaiting payment</p>
+    <p class="admin-stat-value" id="statPending">–</p>
+  </div>
+  <div class="admin-stat-card admin-stat-featured">
+    <p class="admin-stat-label">Revenue (paid)</p>
+    <p class="admin-stat-value" id="statRevenue">–</p>
+  </div>
+</div>
+
+<div class="admin-cards admin-cards-tall">
+  <div class="admin-card">
+    <p class="admin-card-kicker">Listings</p>
+    <h3>Properties</h3>
+    <p>Add, edit, filter and manage all property listings.</p>
+    <a href="{{ "admin/properties/" | relURL }}" class="btn btn-primary">Open properties</a>
+  </div>
+  <div class="admin-card">
+    <p class="admin-card-kicker">Guests</p>
+    <h3>Bookings</h3>
+    <p>See who booked which property and whether they paid.</p>
+    <a href="{{ "admin/bookings/" | relURL }}" class="btn btn-primary">Open bookings</a>
+  </div>
+  <div class="admin-card">
+    <p class="admin-card-kicker">Website</p>
+    <h3>Site home</h3>
+    <p>Review the public LuxeHome website.</p>
+    <a href="{{ "" | relURL }}" class="btn btn-outline">Go to site</a>
+  </div>
+</div>
+
+{{ partial "admin-shell-end.html" . }}
+
+<script>
+  (function () {
+    var api = window.LuxeAPI;
+    function set(id, value) { document.getElementById(id).textContent = value; }
+
+    Promise.all([
+      api.request("/api/properties"),
+      api.request("/api/bookings", { auth: true })
+    ])
+      .then(function (results) {
+        var props = results[0].properties || [];
+        var bookings = results[1].bookings || [];
+
+        set("statTotal", props.length);
+        set("statSale", props.filter(function (p) { return p.status === "For Sale"; }).length);
+        set("statRent", props.filter(function (p) { return p.status === "For Rent"; }).length);
+        set("statFeatured", props.filter(function (p) { return p.featured; }).length);
+
+        var paid = bookings.filter(function (b) { return b.status === "paid"; });
+        var revenue = paid.reduce(function (sum, b) { return sum + Number(b.amount || 0); }, 0);
+        set("statBookings", bookings.length);
+        set("statPaid", paid.length);
+        set("statPending", bookings.filter(function (b) { return b.status === "paypal_created"; }).length);
+        set("statRevenue", "€" + revenue.toLocaleString("en-IE", { maximumFractionDigits: 2 }));
+      })
+      .catch(function (err) {
+        var el = document.getElementById("dashError");
+        el.textContent = err.message;
+        el.hidden = false;
+      });
+  })();
+</script>
+{{ end }}

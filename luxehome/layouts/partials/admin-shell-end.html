@@ -1,0 +1,14 @@
+  </div>
+</div>
+
+<script>
+  (function () {
+    var session = window.LuxeAPI.getSession();
+    var userEl = document.getElementById("adminUserEmail");
+    if (session && userEl) userEl.textContent = session.email;
+
+    document.getElementById("adminLogoutBtn").addEventListener("click", function () {
+      window.LuxeAPI.goToLogin();
+    });
+  })();
+</script>

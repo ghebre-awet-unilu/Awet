@@ -1,0 +1,81 @@
+{{ define "main" }}
+
+<section class="page-hero page-hero-sm">
+  <div class="container">
+    <h1 class="page-title" style="color:#fff;" id="successHeading">Confirming your payment…</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="success-page">
+      <div class="success-icon" id="successIcon">&#8987;</div>
+      <h2 id="successTitle">Please wait</h2>
+      <p id="successText">We are confirming your payment with PayPal. Do not close this page.</p>
+      <dl class="success-details" id="successDetails" hidden></dl>
+      <div class="success-actions">
+        <a href="{{ "properties/" | relURL }}" class="btn btn-primary btn-lg">Browse More Properties</a>
+        <a href="{{ "" | relURL }}" class="btn btn-outline">Back to Home</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    // PayPal sends the order id back as ?token=...
+    var orderId = params.get("token");
+    var cancelled = params.get("cancelled") === "1";
+
+    function show(state, heading, title, text) {
+      document.getElementById("successHeading").textContent = heading;
+      document.getElementById("successTitle").textContent = title;
+      document.getElementById("successText").textContent = text;
+      document.getElementById("successIcon").innerHTML =
+        state === "ok" ? "&#127968;" : state === "cancel" ? "&#8617;" : "&#9888;";
+    }
+
+    function showDetails(b) {
+      var esc = window.LuxeAPI.escapeHtml;
+      var rows = [
+        ["Booking number", "#" + b.id],
+        ["Property", b.property_title],
+        ["Name", b.guest_name],
+        ["Amount paid", "€" + Number(b.amount).toLocaleString("en-IE") + " " + (b.currency || "EUR")]
+      ];
+      var dl = document.getElementById("successDetails");
+      dl.innerHTML = rows.map(function (r) {
+        return "<dt>" + esc(r[0]) + "</dt><dd>" + esc(r[1]) + "</dd>";
+      }).join("");
+      dl.hidden = false;
+    }
+
+    if (!orderId) {
+      show("error", "No payment found", "Nothing to confirm",
+        "This page is shown after paying with PayPal. Choose a property to start a booking.");
+      return;
+    }
+
+    if (cancelled) {
+      window.LuxeAPI.request("/api/paypal/cancel-order", { method: "POST", body: { orderId: orderId } })
+        .catch(function () {});
+      show("cancel", "Payment cancelled", "Your booking was cancelled",
+        "No money was taken. You can book again at any time.");
+      return;
+    }
+
+    window.LuxeAPI.request("/api/paypal/capture-order", { method: "POST", body: { orderId: orderId } })
+      .then(function (data) {
+        show("ok", "✓ Payment Successful", "Your booking is confirmed!",
+          "Thank you for choosing LuxeHome Real Estate. Our team will contact you by email with the next steps.");
+        showDetails(data.booking);
+      })
+      .catch(function (err) {
+        show("error", "Payment not confirmed", "Something went wrong",
+          err.message + " If money was taken from your account, please contact us with your PayPal receipt.");
+      });
+  })();
+</script>
+
+{{ end }}

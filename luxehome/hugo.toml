@@ -1,0 +1,34 @@
+baseURL = "https://ghebre-awet-unilu.github.io/luxehome/"
+languageCode = "en-us"
+title = "LuxeHome"
+
+[params]
+  description = "Find your dream property in Luxembourg — sales and rentals"
+  author = "LuxeHome"
+  # Address of booking_api. Change this when the API is deployed online
+  # (must be https:// if the website itself is served over https).
+  apiBase = "http://localhost:3000"
+  # Shown to visitors before paying. Keep equal to SALE_DEPOSIT_EUR in booking_api/.env
+  saleDeposit = 1000
+
+[menu]
+
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+
+  [[menu.main]]
+    name = "Properties"
+    url = "/properties/"
+    weight = 2
+
+  [[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = 3
+
+  [[menu.main]]
+    name = "Contact"
+    url = "/contact/"
+    weight = 4

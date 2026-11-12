@@ -1,0 +1,102 @@
+{{ define "main" }}
+{{ .Scratch.Set "adminActive" "bookings" }}
+{{ partial "admin-shell-start.html" . }}
+
+<div class="admin-topbar">
+  <div>
+    <h1 class="admin-page-title">Bookings</h1>
+    <p class="admin-page-sub">Guest bookings and their payment status</p>
+  </div>
+  <button type="button" class="btn btn-primary" id="refreshBookingsBtn">Refresh</button>
+</div>
+
+<div class="admin-bookings-panel">
+  <div class="admin-bookings-status" id="bookingsStatus">Loading bookings...</div>
+  <div class="admin-bookings-table-wrap">
+    <table class="admin-bookings-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Guest</th>
+          <th>Email</th>
+          <th>Property</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="bookingsTableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+{{ partial "admin-shell-end.html" . }}
+
+<script>
+  (function () {
+    var api = window.LuxeAPI;
+    var esc = api.escapeHtml;
+    var statusEl = document.getElementById("bookingsStatus");
+    var bodyEl = document.getElementById("bookingsTableBody");
+
+    var STATUS_LABELS = {
+      paid: ["Paid", "is-paid"],
+      paypal_created: ["Awaiting payment", "is-pending"],
+      cancelled: ["Cancelled", "is-cancelled"],
+      payment_failed: ["Payment failed", "is-failed"],
+      pending: ["Pending", "is-pending"]
+    };
+
+    function statusBadge(status) {
+      var s = STATUS_LABELS[status] || [status || "Unknown", "is-pending"];
+      return '<span class="booking-status ' + s[1] + '">' + esc(s[0]) + "</span>";
+    }
+
+    function formatDate(value) {
+      var d = new Date(value);
+      return isNaN(d) ? "" : d.toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" });
+    }
+
+    function loadBookings() {
+      statusEl.textContent = "Loading bookings...";
+      statusEl.className = "admin-bookings-status";
+      bodyEl.innerHTML = "";
+
+      api.request("/api/bookings", { auth: true })
+        .then(function (data) {
+          var bookings = data.bookings || [];
+          if (!bookings.length) {
+            statusEl.textContent = "No bookings found yet.";
+            statusEl.className = "admin-bookings-status is-empty";
+            return;
+          }
+
+          var paid = bookings.filter(function (b) { return b.status === "paid"; }).length;
+          statusEl.textContent = bookings.length + " booking(s) found, " + paid + " paid";
+          statusEl.className = "admin-bookings-status is-ok";
+
+          bodyEl.innerHTML = bookings.map(function (b) {
+            return (
+              "<tr>" +
+              "<td>" + esc(b.id) + "</td>" +
+              "<td>" + esc(formatDate(b.created_at)) + "</td>" +
+              "<td>" + esc(b.guest_name) + "</td>" +
+              "<td>" + esc(b.guest_email) + "</td>" +
+              "<td>" + esc(b.property_title) + "</td>" +
+              "<td>€" + esc(Number(b.amount).toLocaleString("en-IE")) + " " + esc(b.currency || "EUR") + "</td>" +
+              "<td>" + statusBadge(b.status) + "</td>" +
+              "</tr>"
+            );
+          }).join("");
+        })
+        .catch(function (err) {
+          statusEl.textContent = err.message;
+          statusEl.className = "admin-bookings-status is-error";
+        });
+    }
+
+    document.getElementById("refreshBookingsBtn").addEventListener("click", loadBookings);
+    loadBookings();
+  })();
+</script>
+{{ end }}

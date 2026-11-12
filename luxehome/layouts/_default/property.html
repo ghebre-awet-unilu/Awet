@@ -1,0 +1,47 @@
+{{ define "main" }}
+{{/* Detail page for any property in the database: /property/?id=123 (filled by js/booking.js) */}}
+
+<section class="page-hero page-hero-sm">
+  <div class="container">
+    <nav class="breadcrumb">
+      <a href="{{ "" | relURL }}">Home</a> &rsaquo;
+      <a href="{{ "properties/" | relURL }}">Properties</a> &rsaquo;
+      <span id="pdCrumb">Loading…</span>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <p id="pdStatus" class="pd-status">Loading property…</p>
+  </div>
+
+  <div class="container property-detail" id="propertyDetail" hidden>
+    <div class="detail-main">
+      <div class="detail-image" id="pdImage"></div>
+
+      <div class="detail-content">
+        <div class="detail-badges">
+          <span class="card-badge" id="pdBadge"></span>
+          <span class="detail-type" id="pdType"></span>
+        </div>
+        <h1 class="detail-title" id="pdTitle"></h1>
+        <p class="detail-location" id="pdLocation"></p>
+        <p class="detail-price" id="pdPrice"></p>
+        <div class="detail-specs" id="pdSpecs"></div>
+
+        <div class="detail-actions">
+          {{ partial "booking-box.html" (dict "title" "" "price" "" "status" "" "deposit" .Site.Params.saleDeposit) }}
+          <div class="detail-actions-secondary">
+            <a href="{{ "contact/" | relURL }}" class="btn btn-outline">Enquire</a>
+            <a href="{{ "properties/" | relURL }}" class="btn btn-outline">Back</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-body" id="pdBody"></div>
+  </div>
+</section>
+
+{{ end }}

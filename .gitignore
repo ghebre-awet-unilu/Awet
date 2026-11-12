@@ -1,0 +1,6 @@
+node_modules
+.env
+*.log
+luxehome/public/
+luxehome/resources/
+luxehome/.hugo_build.lock

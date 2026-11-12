@@ -1,0 +1,103 @@
+{{ define "main" }}
+
+<section class="page-hero page-hero-sm">
+  <div class="container">
+    <h1 class="page-title">Contact Us</h1>
+    <p class="page-sub">We'd love to hear from you. Reach out and we'll get back to you shortly.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container contact-layout">
+
+    <div class="contact-info">
+      <h2>Get in Touch</h2>
+      <p>Whether you're looking to buy, rent, or simply want advice on the Luxembourg property market, our team is here to help.</p>
+
+      <div class="contact-details">
+        <div class="contact-item">
+          <span class="contact-icon">&#9993;</span>
+          <div>
+            <strong>Email</strong>
+            <p><a href="mailto:info@luxehome.lu">info@luxehome.lu</a></p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span class="contact-icon">&#128222;</span>
+          <div>
+            <strong>Phone</strong>
+            <p><a href="tel:+352661105920">+352 661 105 920</a></p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span class="contact-icon">&#128205;</span>
+          <div>
+            <strong>Office</strong>
+            <p>Luxembourg City, Grand Duchy of Luxembourg</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span class="contact-icon">&#128336;</span>
+          <div>
+            <strong>Hours</strong>
+            <p>Mon–Fri: 9:00 – 18:00<br>Sat: 10:00 – 14:00</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form-wrap">
+      <form class="contact-form" id="contactForm" onsubmit="handleFormSubmit(event)">
+        <h2>Send a Message</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" required placeholder="Your first name">
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" required placeholder="Your last name">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com">
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number (optional)</label>
+          <input type="tel" id="phone" name="phone" placeholder="+352 ...">
+        </div>
+
+        <div class="form-group">
+          <label for="interest">I am interested in</label>
+          <select id="interest" name="interest">
+            <option value="">Select an option</option>
+            <option value="buying">Buying a property</option>
+            <option value="renting">Renting a property</option>
+            <option value="advice">General market advice</option>
+            <option value="valuation">Property valuation</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" required placeholder="Tell us how we can help you..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full">Send Message</button>
+
+        <div id="formSuccess" class="form-success" style="display:none;">
+          &#10003; Thank you! We'll be in touch soon.
+        </div>
+
+        <div id="formError" class="form-error" style="display:none;"></div>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+{{ end }}

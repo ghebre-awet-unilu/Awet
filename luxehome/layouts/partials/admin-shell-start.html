@@ -1,0 +1,28 @@
+{{ partial "admin-guard.html" . }}
+{{ $active := .Scratch.Get "adminActive" }}
+
+<div class="admin-app">
+  <aside class="admin-sidebar">
+    <a class="admin-sidebar-brand" href="{{ "admin/dashboard/" | relURL }}">
+      <span class="admin-sidebar-mark">LH</span>
+      <span class="admin-sidebar-name">LuxeHome</span>
+    </a>
+
+    <p class="admin-sidebar-label">Main</p>
+    <nav class="admin-sidebar-nav">
+      <a class="admin-nav-link{{ if eq $active "dashboard" }} is-active{{ end }}" href="{{ "admin/dashboard/" | relURL }}">Dashboard</a>
+      <a class="admin-nav-link{{ if eq $active "properties" }} is-active{{ end }}" href="{{ "admin/properties/" | relURL }}">Properties</a>
+      <a class="admin-nav-link{{ if eq $active "bookings" }} is-active{{ end }}" href="{{ "admin/bookings/" | relURL }}">Bookings</a>
+      <a class="admin-nav-link" href="{{ .Site.Home.RelPermalink}}">Site home</a>
+    </nav>
+
+    <div class="admin-sidebar-foot">
+      <div>
+        <p class="admin-sidebar-user" id="adminUserEmail">Admin User</p>
+        <p class="admin-sidebar-role">Administrator</p>
+      </div>
+      <button type="button" class="admin-sidebar-logout" id="adminLogoutBtn">Logout</button>
+    </div>
+  </aside>
+
+  <div class="admin-main">

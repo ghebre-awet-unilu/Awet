@@ -1,0 +1,7 @@
+<script>
+  // Hide admin pages unless a valid (non-expired) login session exists.
+  // The API checks the token on every request as well.
+  if (!window.LuxeAPI || !window.LuxeAPI.getSession()) {
+    window.LuxeAPI ? window.LuxeAPI.goToLogin() : window.location.replace("{{ "admin/" | relURL }}");
+  }
+</script>

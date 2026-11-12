@@ -1,0 +1,166 @@
+{{ define "main" }}
+
+{{/* ===== HERO ===== */}}
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-glow"></div>
+  <div class="container hero-content fade-up">
+    <p class="hero-eyebrow">Luxembourg Real Estate</p>
+    <h1 class="hero-title">Find a home that feels right</h1>
+    <p class="hero-sub">
+      Warm interiors, clear prices, and quiet neighbourhoods —
+      apartments, houses, and studios across the Grand Duchy.
+    </p>
+    <div class="hero-actions">
+      <a href="{{ "properties/" | relURL }}" class="btn btn-primary">See properties</a>
+      <a href="{{ "contact/" | relURL }}" class="btn btn-outline">Talk to us</a>
+    </div>
+  </div>
+</section>
+
+{{/* ===== HIGHLIGHT STRIP ===== */}}
+<section class="highlight-strip">
+  <div class="container highlight-row">
+    <div class="highlight-item">
+      <strong>Sale &amp; rent</strong>
+      <span>Both options in one place</span>
+    </div>
+    <div class="highlight-item">
+      <strong>Local agents</strong>
+      <span>People who know Luxembourg</span>
+    </div>
+    <div class="highlight-item">
+      <strong>Clear listings</strong>
+      <span>Photos, price, and specs upfront</span>
+    </div>
+  </div>
+</section>
+
+{{/* ===== HOW IT WORKS ===== */}}
+<section class="section section-soft">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Easy process</p>
+      <h2 class="section-title">How it works</h2>
+    </div>
+
+    <div class="services-grid">
+      <a href="{{ "properties/" | absURL }}" class="service-card step-card step-link">
+        <div class="step-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"/>
+            <path d="M20 20l-3.5-3.5"/>
+          </svg>
+        </div>
+        <div class="step-num">01</div>
+        <h3>Browse</h3>
+        <p>Open the properties page and look at photos, price, and location.</p>
+        <span class="step-go">View properties →</span>
+      </a>
+
+      <a href="{{ "properties/" | absURL }}" class="service-card step-card step-link">
+        <div class="step-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-9.5z"/>
+          </svg>
+        </div>
+        <div class="step-num">02</div>
+        <h3>Pick one</h3>
+        <p>Click a home you like and read the full details.</p>
+        <span class="step-go">Choose a home →</span>
+      </a>
+
+      <a href="{{ "contact/" | absURL }}" class="service-card step-card step-link">
+        <div class="step-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h16v12H4z"/>
+            <path d="M4 7l8 6 8-6"/>
+          </svg>
+        </div>
+        <div class="step-num">03</div>
+        <h3>Contact us</h3>
+        <p>Send a message — we help you with the next step.</p>
+        <span class="step-go">Open contact →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+{{/* ===== FEATURED HOMES ===== */}}
+<section class="section featured">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Start here</p>
+      <h2 class="section-title">Homes you can view today</h2>
+    </div>
+
+    <div class="property-grid" id="featuredGrid">
+      {{ range first 3 (where .Site.RegularPages "Section" "properties") }}
+      <div class="property-card">
+        <div class="card-image">
+          {{ if .Params.image }}
+          <img src="{{ .Params.image | strings.TrimPrefix "/" | absURL }}" alt="{{ .Title }}">
+          {{ end }}
+          <span class="card-badge {{ if eq .Params.status "For Rent" }}badge-rent{{ else }}badge-sale{{ end }}">{{ .Params.status }}</span>
+        </div>
+        <div class="card-body">
+          <div class="card-type">{{ .Params.type }}</div>
+          <h3 class="card-title">{{ .Title }}</h3>
+          <p class="card-location">{{ .Params.location }}</p>
+          <p class="card-desc">{{ .Params.description | truncate 110 }}</p>
+          <div class="card-footer">
+            <span class="card-price">{{ .Params.price }}</span>
+            <a href="{{ .RelPermalink }}" class="btn btn-sm btn-primary">View</a>
+          </div>
+        </div>
+      </div>
+      {{ end }}
+    </div>
+
+    <div class="section-cta">
+      <a href="{{ "properties/" | relURL }}" class="btn btn-outline">See all properties</a>
+    </div>
+  </div>
+</section>
+
+{{/* ===== NEIGHBOURHOODS ===== */}}
+<section class="section section-places">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Explore</p>
+      <h2 class="section-title">Popular areas</h2>
+    </div>
+    <div class="places-grid">
+      <article class="place-card place-a">
+        <h3>Kirchberg</h3>
+        <p>Modern living near EU institutions</p>
+      </article>
+      <article class="place-card place-b">
+        <h3>Limpertsberg</h3>
+        <p>Quiet streets and classic homes</p>
+      </article>
+      <article class="place-card place-c">
+        <h3>City Centre</h3>
+        <p>Walk to cafés, shops, and parks</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+{{/* ===== QUOTE + CONTACT — ek hi section ===== */}}
+<section class="closing-band">
+  <div class="container">
+    <div class="closing-box">
+      <p class="closing-quote">
+        “We help you find a place that feels like home — not just another listing.”
+      </p>
+      <p class="quote-by">— The LuxeHome team</p>
+      <div class="closing-divider"></div>
+      <h2>Not sure where to start?</h2>
+      <p class="closing-text">Tell us what you need — buy or rent — and we will help.</p>
+      <a href="{{ "contact/" | absURL }}" class="btn btn-primary btn-lg">Contact us</a>
+    </div>
+  </div>
+</section>
+
+{{ end }}

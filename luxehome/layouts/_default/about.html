@@ -1,0 +1,142 @@
+{{ define "main" }}
+
+<section class="page-hero page-hero-sm about-hero">
+  <div class="container">
+    <p class="hero-eyebrow about-eyebrow">Our story</p>
+    <h1 class="page-title">{{ .Title }}</h1>
+    <p class="page-sub">Local agents for sales and rentals in Luxembourg.</p>
+  </div>
+</section>
+
+<section class="section about-intro-section">
+  <div class="container">
+    <div class="about-card about-intro-card">
+      <div class="about-intro-text">
+        <p class="section-eyebrow">Who we are</p>
+        <h2 class="about-heading">A clearer way to find your next home</h2>
+        <p>
+          LuxeHome helps people buy and rent homes across Luxembourg.
+          Simple listings, honest advice, and a team that knows the local market.
+        </p>
+        <a href="{{ "contact/" | absURL }}" class="btn btn-primary">Talk to us</a>
+      </div>
+      <div class="about-intro-thumb">
+        <img src="{{ "images/family-house-exterior.png" | absURL }}" alt="Family home in Luxembourg">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section about-services-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">What we do</p>
+      <h2 class="section-title">Our services</h2>
+    </div>
+    <div class="about-services-grid about-services-grid-3">
+      <article class="about-mini-card">
+        <div class="about-mini-thumb">
+          <img src="{{ "images/luxury-house-living-room.png" | absURL }}" alt="Buy">
+        </div>
+        <h3>Buy</h3>
+        <p>Villas, apartments, and family homes for sale.</p>
+      </article>
+      <article class="about-mini-card">
+        <div class="about-mini-thumb">
+          <img src="{{ "images/modern-apartment-interior.png" | absURL }}" alt="Rent">
+        </div>
+        <h3>Rent</h3>
+        <p>Clear rental options with flexible terms.</p>
+      </article>
+      <article class="about-mini-card">
+        <div class="about-mini-thumb">
+          <img src="{{ "images/riverside-apartment.png" | absURL }}" alt="Advice">
+        </div>
+        <h3>Advice</h3>
+        <p>Local guidance for buyers, tenants, and expats.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section about-why-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Why us</p>
+      <h2 class="section-title">Why choose LuxeHome</h2>
+    </div>
+    <div class="about-why-grid about-why-grid-3">
+      <div class="about-why-card">
+        <h3>Local knowledge</h3>
+        <p>We know Luxembourg’s neighbourhoods and prices.</p>
+      </div>
+      <div class="about-why-card">
+        <h3>Clear process</h3>
+        <p>From viewing to paperwork — no confusion.</p>
+      </div>
+      <div class="about-why-card">
+        <h3>Honest fees</h3>
+        <p>Transparent costs. No hidden surprises.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section team-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Our team</p>
+      <h2 class="section-title">Meet the team</h2>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-photo-wrap">
+          <img src="{{ "images/team-nathalie.jpg" | absURL }}" alt="Nathalie" class="team-photo team-photo-nathalie">
+        </div>
+        <div class="team-info">
+          <h3 class="team-name">Nathalie</h3>
+          <p class="team-role">Head Officer</p>
+          <p class="team-bio">
+            Nathalie leads client strategy at LuxeHome. She helps buyers and renters
+            compare areas, set a budget, and move from first viewing to a clear decision.
+          </p>
+          <ul class="team-points">
+            <li>Sales &amp; rental guidance</li>
+            <li>Neighbourhood matching</li>
+            <li>Client negotiation support</li>
+          </ul>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-photo-wrap">
+          <img src="{{ "images/team-mara.jpg" | absURL }}" alt="Mara" class="team-photo team-photo-mara">
+        </div>
+        <div class="team-info">
+          <h3 class="team-name">Mara</h3>
+          <p class="team-role">Secretary</p>
+          <p class="team-bio">
+            Mara keeps every visit organised. She manages appointments, answers
+            messages, and makes sure viewings and follow-ups stay on schedule.
+          </p>
+          <ul class="team-points">
+            <li>Viewing schedules</li>
+            <li>Client communication</li>
+            <li>Office coordination</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section about-cta-section">
+  <div class="container">
+    <div class="closing-box about-cta-box">
+      <h2>Want to view a home?</h2>
+      <p class="closing-text">Send a short message — we will get back to you.</p>
+      <a href="{{ "contact/" | absURL }}" class="btn btn-primary btn-lg">Contact us</a>
+    </div>
+  </div>
+</section>
+
+{{ end }}

@@ -1,0 +1,169 @@
+{{ define "main" }}
+
+{{ if eq .Section "properties" }}
+
+<section class="page-hero page-hero-sm">
+  <div class="container">
+    <nav class="breadcrumb">
+      <a href="{{ "" | absURL }}">Home</a> &rsaquo;
+      <a href="{{ "properties/" | absURL }}">Properties</a> &rsaquo;
+      <span>{{ .Title }}</span>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container property-detail">
+
+    <div class="detail-main">
+      <div class="detail-image">
+        {{ if .Params.image }}
+        <img src="{{ .Params.image | strings.TrimPrefix "/" | absURL }}" alt="{{ .Title }}">
+        {{ else }}
+        <div class="detail-image-placeholder">
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+          <p>{{ .Title }}</p>
+        </div>
+        {{ end }}
+      </div>
+
+      <div class="detail-content">
+        <div class="detail-badges">
+          <span class="card-badge {{ if eq .Params.status "For Rent" }}badge-rent{{ else }}badge-sale{{ end }}">{{ .Params.status }}</span>
+          <span class="detail-type">{{ .Params.type }}</span>
+        </div>
+        <h1 class="detail-title">{{ .Title }}</h1>
+        <p class="detail-location">&#128205; {{ .Params.location }}</p>
+        <p class="detail-price">{{ .Params.price }}</p>
+
+        <div class="detail-specs">
+          {{ if .Params.bedrooms }}
+          <div class="spec-item">
+            <span class="spec-icon">&#127978;</span>
+            <span class="spec-val">{{ .Params.bedrooms }}</span>
+            <span class="spec-lbl">Bedrooms</span>
+          </div>
+          {{ end }}
+          {{ if .Params.bathrooms }}
+          <div class="spec-item">
+            <span class="spec-icon">&#128716;</span>
+            <span class="spec-val">{{ .Params.bathrooms }}</span>
+            <span class="spec-lbl">Bathrooms</span>
+          </div>
+          {{ end }}
+          {{ if .Params.area }}
+          <div class="spec-item">
+            <span class="spec-icon">&#9632;</span>
+            <span class="spec-val">{{ .Params.area }}m²</span>
+            <span class="spec-lbl">Floor Area</span>
+          </div>
+          {{ end }}
+        </div>
+
+        <div class="detail-actions">
+          {{ partial "booking-box.html" (dict "title" .Title "price" .Params.price "status" .Params.status "deposit" .Site.Params.saleDeposit) }}
+          <div class="detail-actions-secondary">
+            <a href="{{ "contact/" | relURL }}" class="btn btn-outline">Enquire</a>
+            <a href="{{ "properties/" | relURL }}" class="btn btn-outline">Back</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-body">
+      {{ .Content }}
+    </div>
+
+  </div>
+</section>
+
+{{ else if eq .File.BaseFileName "about" }}
+
+<section class="page-hero page-hero-sm about-hero">
+  <div class="container">
+    <h1 class="page-title">About Us</h1>
+    <p class="page-sub">Trusted Luxembourg real estate experts since 2008</p>
+  </div>
+</section>
+
+<section class="section about-content-section">
+  <div class="container about-layout">
+    <div class="about-text">
+      <div class="about-block">
+        <h2 class="about-heading">Who We Are</h2>
+        <p>LuxeHome Real Estate is a Luxembourg-based property agency specialising in residential sales and rentals across the Grand Duchy. Founded in 2008, we have built a reputation for honest advice, deep local knowledge, and genuine care for our clients.</p>
+        <p>Whether you are buying your first home, investing in a rental property, or relocating to Luxembourg for work, our team guides you through every step of the process — from the first viewing to the final signature.</p>
+      </div>
+      <div class="about-block">
+        <h2 class="about-heading">Our Services</h2>
+        <ul class="about-list">
+          <li><strong>Residential Sales</strong> — apartments, villas, penthouses, and family homes across Luxembourg City and the surrounding communes</li>
+          <li><strong>Rentals</strong> — long-term rental properties with full management support</li>
+          <li><strong>Investment Advice</strong> — market analysis and portfolio guidance for property investors</li>
+          <li><strong>Relocation Assistance</strong> — dedicated support for international clients and expat families</li>
+        </ul>
+      </div>
+      <div class="about-block">
+        <h2 class="about-heading">Why Choose Us</h2>
+        <ul class="about-list">
+          <li><strong>15+ Years Experience</strong> — deep knowledge of the Luxembourg property market</li>
+          <li><strong>Multilingual Team</strong> — we speak English, French, German, and Luxembourgish</li>
+          <li><strong>Transparent Fees</strong> — no hidden costs, ever</li>
+          <li><strong>End-to-End Support</strong> — from first search to final signature</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section team-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">The people behind LuxeHome</p>
+      <h2 class="section-title">Meet Our Team</h2>
+    </div>
+    <div class="team-grid">
+
+      <div class="team-card">
+        <div class="team-photo-wrap">
+          <img src="{{ "images/team-nathalie.jpg" | absURL }}" alt="Nathalie" class="team-photo">
+        </div>
+        <div class="team-info">
+          <h3 class="team-name">Nathalie</h3>
+          <p class="team-role">Head Officer</p>
+          <p class="team-bio">Leading LuxeHome's vision and strategy, ensuring every client receives the highest standard of service across Luxembourg's property market.</p>
+        </div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-photo-wrap">
+          <img src="{{ "images/team-mara.jpg" | absURL }}" alt="Mara" class="team-photo">
+        </div>
+        <div class="team-info">
+          <h3 class="team-name">Mara</h3>
+          <p class="team-role">Secretary</p>
+          <p class="team-bio">Managing client appointments, correspondence, and day-to-day operations to keep LuxeHome running smoothly for every client.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{{ else }}
+
+<section class="page-hero page-hero-sm">
+  <div class="container">
+    <h1 class="page-title">{{ .Title }}</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container content-page">
+    {{ .Content }}
+  </div>
+</section>
+
+{{ end }}
+
+{{ end }}

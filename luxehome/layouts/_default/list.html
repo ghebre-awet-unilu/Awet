@@ -1,0 +1,86 @@
+{{ define "main" }}
+
+<section class="page-hero">
+  <div class="container">
+    <h1 class="page-title">{{ .Title }}</h1>
+    <p class="page-sub">{{ with .Description }}{{ . }}{{ else }}Browse our full selection of properties across Luxembourg.{{ end }}</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <div class="filter-bar">
+      <input
+        type="text"
+        id="searchInput"
+        class="search-input"
+        placeholder="Search by title, location, or type..."
+        aria-label="Search properties"
+      >
+      <div class="filter-controls">
+        <select id="filterType" class="filter-select" aria-label="Filter by type">
+          <option value="">All Types</option>
+          <option value="Apartment">Apartment</option>
+          <option value="Villa">Villa</option>
+          <option value="Penthouse">Penthouse</option>
+          <option value="Studio">Studio</option>
+        </select>
+        <select id="filterStatus" class="filter-select" aria-label="Filter by status">
+          <option value="">All Status</option>
+          <option value="For Sale">For Sale</option>
+          <option value="For Rent">For Rent</option>
+        </select>
+        <button id="clearFilters" class="btn btn-outline btn-sm">Clear</button>
+      </div>
+    </div>
+
+    <p class="results-count" id="resultsCount"></p>
+
+    <div class="property-grid" id="propertyGrid">
+      {{ range .Pages }}
+      <div class="property-card"
+        data-title="{{ .Title | lower }}"
+        data-location="{{ .Params.location | lower }}"
+        data-type="{{ .Params.type }}"
+        data-status="{{ .Params.status }}"
+      >
+        <div class="card-image">
+          {{ if .Params.image }}
+          <img src="{{ .Params.image }}" alt="{{ .Title }}">
+          {{ else }}
+          <div class="card-image-placeholder">
+            <span>&#127968;</span>
+          </div>
+          {{ end }}
+          <span class="card-badge {{ if eq .Params.status "For Rent" }}badge-rent{{ else }}badge-sale{{ end }}">{{ .Params.status }}</span>
+        </div>
+        <div class="card-body">
+          <div class="card-type">{{ .Params.type }}</div>
+          <h3 class="card-title">{{ .Title }}</h3>
+          <p class="card-location">&#128205; {{ .Params.location }}</p>
+          <p class="card-desc">{{ .Params.description | truncate 100 }}</p>
+          <div class="card-meta">
+            {{ if .Params.bedrooms }}<span>&#127978; {{ .Params.bedrooms }} bed</span>{{ end }}
+            {{ if .Params.bathrooms }}<span>&#128716; {{ .Params.bathrooms }} bath</span>{{ end }}
+            {{ if .Params.area }}<span>&#9632; {{ .Params.area }}m²</span>{{ end }}
+          </div>
+          <div class="card-footer">
+            <span class="card-price">{{ .Params.price }}</span>
+            <a href="{{ .RelPermalink }}" class="btn btn-sm btn-primary">View Details</a>
+          </div>
+        </div>
+      </div>
+      {{ end }}
+    </div>
+
+    <div id="noResults" class="no-results" style="display:none;">
+      <span>&#128269;</span>
+      <p>No properties match your search. Try adjusting your filters.</p>
+      <button onclick="clearAllFilters()" class="btn btn-outline btn-sm">Clear Filters</button>
+    </div>
+
+  </div>
+</section>
+
+{{ end }}

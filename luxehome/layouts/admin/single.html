@@ -1,0 +1,6 @@
+{{ define "main" }}
+{{ partial "admin-guard.html" . }}
+<script>
+  window.location.replace("{{ "admin/dashboard/" | relURL }}");
+</script>
+{{ end }}
